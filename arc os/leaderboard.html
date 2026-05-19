@@ -3,20 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marshal QR Scanning Portal</title>
+    <title>Official Live Leaderboard</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://unpkg.com/html5-qrcode"></script>
 </head>
 <body>
     <div class="container">
         <a href="index.html" style="text-decoration: none; color: #1982c4; font-weight: 600; font-size: 14px;">← Back to Main Menu</a>
-        <h2>Checkpoint / Finish Line Scanner</h2>
+        <h2>Official Live Standings</h2>
+        <p style="margin-bottom: 25px;">
+            Rankings refresh in real-time as runners clear checkpoints
+        </p>
         
-        <div id="reader"></div>
-        
-        <div id="result" class="success-msg" style="display: none;"></div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Runner ID</th>
+                    <th>Time Cleared</th>
+                </tr>
+            </thead>
+            <tbody id="leaderboard-data">
+                <tr>
+                    <td colspan="3" style="text-align: center; color: #627d98; font-weight: 500;">Awaiting initialization parameters from checkpoint marshals...</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
-    <script type="module" src="scanner.js"></script>
+    <script type="module" src="leaderboard.js"></script>
 </body>
 </html>
