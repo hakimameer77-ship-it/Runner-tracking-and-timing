@@ -21,29 +21,29 @@ function onScanSuccess(decodedText, decodedResult) {
     const runnerId = decodedText;
     const currentTime = new Date();
     
-    // Formatting readable human time (HH:MM:SS)
+    // Formatting standard human-readable time (HH:MM:SS)
     const timestamp = currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }); 
-    const rawTime = currentTime.getTime(); // Precise unix epoch millisecond for sorting rank flawlessly
+    const rawTime = currentTime.getTime(); // Precise absolute unix timestamp used for ranking logic flawlessly
 
     const resultDiv = document.getElementById('result');
     resultDiv.style.display = "block";
     resultDiv.innerText = `Logged Successfully! Runner ID: ${runnerId} at ${timestamp}`;
 
-    // Upload transaction live under the 'tracking' directory path
+    // Upload records directly to Firebase tracking path tree
     set(ref(database, 'tracking/' + runnerId), {
         runner_id: runnerId,
         recorded_time: timestamp,
         raw_time: rawTime
     }).catch((error) => {
-        console.error("Database storage exception caught:", error);
+        console.error("Database cloud write error caught:", error);
     });
 }
 
 function onScanFailure(error) {
-    // Suppressing scanning warning streams to clear console overhead
+    // Suppressed scanning frame warning logs to keep developer console clear
 }
 
-// Instantiate visual scanner interface modules
+// Instantiate visual scanner wrapper interface configurations
 let html5QrcodeScanner = new Html5QrcodeScanner(
     "reader", { fps: 15, qrbox: 250 }, false
 );
