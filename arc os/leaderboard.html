@@ -1,1 +1,31 @@
-
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Papan Pendahulu Rasmi (Live)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" style="text-decoration: none; color: #3182ce;">← Kembali</a>
+        <h2>Keputusan Larian Terkini (Live Leaderboard)</h2>
+        <p style="text-align: center; color: #718096;">Data dikemas kini secara automatik menggunakan Firebase</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Kedudukan (Rank)</th>
+                    <th>ID Pelari</th>
+                    <th>Waktu Melepasi Penamat</th>
+                </tr>
+            </thead>
+            <tbody id="leaderboard-data">
+                <tr>
+                    <td colspan="3" style="text-align: center; color: #999;">Menunggu data imbasan pertama...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script type="module" src="leaderboard.js"></script>
+</body>
+</html>
