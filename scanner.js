@@ -9,34 +9,18 @@ const firebaseConfig = {
   measurementId: "G-2XH1NE0EPT"
 };
 
-// Initialize Firebase
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
-
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
-function onScanSuccess(decodedText, decodedResult) {
+function onScanSuccess(decodedText) {
     const runnerId = decodedText;
-    const currentTime = new Date();
-    const timestamp = currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-    const rawTime = currentTime.getTime();
-
-    // Bunyi bip sukses
-    const audio = document.getElementById('beep-sound');
-    if(audio) { audio.play(); }
-
-    // Hantar ke Database path 'tracking/'
     database.ref('tracking/' + runnerId).set({
         runner_id: runnerId,
-        recorded_time: timestamp,
-        raw_time: rawTime
+        recorded_time: new Date().toLocaleTimeString(),
+        raw_time: Date.now()
     });
-
-    const resultDiv = document.getElementById('result');
-    resultDiv.style.display = "block";
-    resultDiv.innerHTML = `⚡ [LOGGED] ${runnerId} <br> Time: ${timestamp}`;
+    alert("Logged: " + runnerId);
 }
 
-let html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 15, qrbox: 250 }, false);
-html5QrcodeScanner.render(onScanSuccess);
+let scanner = new Html5QrcodeScanner("reader", { fps: 15, qrbox: 250 }, false);
+scanner.render(onScanSuccess);
