@@ -20,20 +20,20 @@ const leaderboardTable = document.getElementById('leaderboard-data');
 
 const trackingRef = ref(database, 'tracking/');
 
-// Actively listen to real-time additions or adjustments in the cloud
+// Subscribing to Cloud Tree variations dynamically
 onValue(trackingRef, (snapshot) => {
     const data = snapshot.val();
     if (data) {
-        // Map data structure into an array format
+        // Map raw object data properties into a linear array instance
         let runnersArray = Object.values(data);
         
-        // Sort ascending using the raw chronological unix stamp (Fastest runners first)
+        // Sorting chronologically using epoch millisecond values (Fastest runner hits #1)
         runnersArray.sort((a, b) => a.raw_time - b.raw_time);
         
-        // Clear previous table viewport records before iterating
+        // Emptying table contents rows viewport data properties before injection loop
         leaderboardTable.innerHTML = "";
         
-        // Construct and append layout strings rows live
+        // Re-inject layout row structures cleanly 
         runnersArray.forEach((runner, index) => {
             let row = `<tr>
                 <td><strong>#${index + 1}</strong></td>
@@ -43,6 +43,6 @@ onValue(trackingRef, (snapshot) => {
             leaderboardTable.innerHTML += row;
         });
     } else {
-        leaderboardTable.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #999;">Awaiting initialization parameters from checkpoint marshals...</td></tr>`;
+        leaderboardTable.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #627d98; font-weight: 500;">Awaiting initialization parameters from checkpoint marshals...</td></tr>`;
     }
 });
