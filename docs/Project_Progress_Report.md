@@ -1,11 +1,5 @@
 # Project Progress Report: Arc IoT Runner Tracking System
 
-**Date:** May 19, 2026  
-**Status:** Beta / Deployment Phase  
-**Project Lead:** [Your Name/Team Name]
-
----
-
 ## 1. Executive Summary
 The Arc IoT Runner Tracking System is an automated, real-time timing solution designed for athletic events. By leveraging QR Code scanning and Firebase Cloud synchronization, the project eliminates manual timekeeping, providing instant leaderboard updates and an immersive, futuristic data visualization experience.
 
