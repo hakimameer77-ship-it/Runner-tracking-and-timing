@@ -1,31 +1,35 @@
 <!DOCTYPE html>
-<html lang="ms">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Papan Pendahulu Rasmi (Live)</title>
+    <title>Official Live Leaderboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <a href="index.html" style="text-decoration: none; color: #3182ce;">← Kembali</a>
-        <h2>Keputusan Larian Terkini (Live Leaderboard)</h2>
-        <p style="text-align: center; color: #718096;">Data dikemas kini secara automatik menggunakan Firebase</p>
+        <a href="index.html" style="text-decoration: none; color: #3182ce;">← Back to Main Menu</a>
+        <h2>Official Live Standings</h2>
+        <p style="text-align: center; color: #718096; margin-bottom: 20px;">
+            Rankings refresh in real-time as runners clear checkpoints
+        </p>
+        
         <table>
             <thead>
                 <tr>
-                    <th>Kedudukan (Rank)</th>
-                    <th>ID Pelari</th>
-                    <th>Waktu Melepasi Penamat</th>
+                    <th>Rank</th>
+                    <th>Runner ID</th>
+                    <th>Time Cleared</th>
                 </tr>
             </thead>
             <tbody id="leaderboard-data">
                 <tr>
-                    <td colspan="3" style="text-align: center; color: #999;">Menunggu data imbasan pertama...</td>
+                    <td colspan="3" style="text-align: center; color: #999;">Awaiting initialization parameters from checkpoint marshals...</td>
                 </tr>
             </tbody>
         </table>
     </div>
+
     <script type="module" src="leaderboard.js"></script>
 </body>
 </html>
