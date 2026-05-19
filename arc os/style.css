@@ -1,1 +1,189 @@
+/* RESET & ELEMENT ASAS */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
+body {
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: #f0f4f8;
+    color: #1a202c;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* CONTAINER UTAMA */
+.container {
+    width: 100%;
+    max-width: 650px;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+/* REKA BENTUK TEXT */
+h1 {
+    font-size: 24px;
+    color: #1a365d;
+    text-align: center;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+h2 {
+    font-size: 20px;
+    color: #2b6cb0;
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+p {
+    font-size: 14px;
+    color: #4a5568;
+    line-height: 1.6;
+}
+
+/* BUTANG & NAVIGATION */
+.btn-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 14px 20px;
+    background-color: #3182ce;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: 600;
+    text-align: center;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(49, 130, 206, 0.15);
+}
+
+.btn:hover {
+    background-color: #2b6cb0;
+    transform: translateY(-1px);
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+/* REKA BENTUK SCANNER KOTAK KAMERA */
+#reader {
+    width: 100%;
+    border: 2px dashed #cbd5e0 !important;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #f7fafc;
+    margin: 20px 0;
+}
+
+/* Elemen dalaman library html5-qrcode */
+#reader __video {
+    border-radius: 10px;
+}
+
+#reader button {
+    padding: 10px 18px;
+    background-color: #4a5568;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    margin: 10px auto;
+    display: block;
+}
+
+#reader button:hover {
+    background-color: #2d3748;
+}
+
+/* NOTIFIKASI BERJAYA SCAN */
+.success-msg {
+    background-color: #f0fff4;
+    color: #38a169;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 5px solid #38a169;
+    text-align: center;
+    font-weight: 600;
+    margin-top: 15px;
+    font-size: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+/* JADUAL PAPAN PENDAHULU (LEADERBOARD) */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 15px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+}
+
+th, td {
+    padding: 14px 16px;
+    text-align: left;
+}
+
+th {
+    background-color: #ebf8ff;
+    color: #2b6cb0;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #bee3f8;
+}
+
+td {
+    border-bottom: 1px solid #e2e8f0;
+    background-color: #ffffff;
+    font-size: 14px;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tr:hover td {
+    background-color: #f7fafc;
+}
+
+/* KEDUDUKAN 3 TERATAS (HIGHLIGHT) */
+tr:nth-child(1) td strong { color: #d69e2e; font-size: 16px; } /* Pingat Emas */
+tr:nth-child(2) td strong { color: #718096; font-size: 15px; } /* Pingat Perak */
+tr:nth-child(3) td strong { color: #b7791f; font-size: 15px; } /* Pingat Gangsa */
+
+/* RESPONSIVE UNTUK SKRIN KECIL */
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    .container {
+        padding: 20px;
+    }
+    h1 {
+        font-size: 20px;
+    }
+    th, td {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+}
