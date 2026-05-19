@@ -1,4 +1,8 @@
-/* RESET & BASE STYLES */
+/* ==========================================================================
+   PREMIUM SPORT TIMING SYSTEM THEME (ELECTRIC NEON DESIGN)
+   ========================================================================== */
+
+/* RESET & CORE BASE */
 * {
     box-shadow: none;
     box-sizing: border-box;
@@ -8,182 +12,214 @@
 
 body {
     font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
-    background-color: #f0f4f8;
-    color: #1a202c;
-    padding: 20px;
+    background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+    color: #102a43;
+    padding: 40px 20px;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
 }
 
-/* MAIN CONTAINER */
+/* MODERN FLOATING CONTAINER */
 .container {
     width: 100%;
-    max-width: 650px;
+    max-width: 680px;
     background: #ffffff;
-    padding: 30px;
-    border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    padding: 40px;
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(16, 42, 67, 0.06), 0 1px 3px rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
 }
 
-/* TYPOGRAPHY */
+/* HIGH-IMPACT TYPOGRAPHY */
 h1 {
-    font-size: 24px;
-    color: #1a365d;
+    font-size: 28px;
+    background: linear-gradient(135deg, #0b69a3 0%, #032b45 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     text-align: center;
-    margin-bottom: 8px;
-    font-weight: 700;
+    margin-bottom: 10px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
 }
 
 h2 {
-    font-size: 20px;
-    color: #2b6cb0;
+    font-size: 22px;
+    color: #1982c4;
     text-align: center;
     margin-top: 15px;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
 }
 
 p {
-    font-size: 14px;
-    color: #4a5568;
+    font-size: 15px;
+    color: #486581;
     line-height: 1.6;
+    text-align: center;
 }
 
-/* BUTTONS & NAVIGATION */
+/* PREMIUM ACTION BUTTONS */
 .btn-nav {
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    margin-top: 30px;
+    gap: 18px;
+    margin-top: 35px;
 }
 
 .btn {
     display: inline-block;
-    padding: 14px 20px;
-    background-color: #3182ce;
+    padding: 16px 24px;
+    background: linear-gradient(135deg, #1982c4 0%, #0b69a3 100%);
     color: #ffffff;
     text-decoration: none;
-    border-radius: 10px;
+    border-radius: 14px;
     font-weight: 600;
+    font-size: 15px;
     text-align: center;
-    transition: background-color 0.2s ease, transform 0.1s ease;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     border: none;
     cursor: pointer;
-    box-shadow: 0 4px 6px rgba(49, 130, 206, 0.15);
+    box-shadow: 0 4px 12px rgba(25px, 130, 196, 0.2);
+    letter-spacing: 0.2px;
 }
 
 .btn:hover {
-    background-color: #2b6cb0;
-    transform: translateY(-1px);
+    background: linear-gradient(135deg, #2292d7 0%, #1279b5 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(25px, 130, 196, 0.3);
 }
 
 .btn:active {
     transform: translateY(1px);
+    box-shadow: 0 2px 6px rgba(25px, 130, 196, 0.2);
 }
 
-/* QR CODE SCANNER UI */
+/* NEON SCANNER SHIELD UI */
 #reader {
     width: 100%;
-    border: 2px dashed #cbd5e0 !important;
-    border-radius: 12px;
+    border: 3px dashed #bcccdc !important;
+    border-radius: 20px;
     overflow: hidden;
-    background: #f7fafc;
-    margin: 20px 0;
+    background: #f0f4f8;
+    margin: 25px 0;
+    padding: 10px;
+    transition: border-color 0.3s ease;
+}
+
+#reader:hover {
+    border-color: #1982c4 !important;
 }
 
 #reader video {
-    border-radius: 10px;
+    border-radius: 14px;
 }
 
 #reader button {
-    padding: 10px 18px;
-    background-color: #4a5568;
+    padding: 12px 24px;
+    background: #486581;
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: 10px;
     cursor: pointer;
     font-weight: 600;
-    margin: 10px auto;
+    font-size: 14px;
+    margin: 15px auto;
     display: block;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
 
 #reader button:hover {
-    background-color: #2d3748;
+    background: #334e68;
+    transform: translateY(-1px);
 }
 
-/* SUCCESS TOAST NOTIFICATION */
+/* CYBER GLOW SUCCESS TOAST */
 .success-msg {
-    background-color: #f0fff4;
-    color: #38a169;
-    padding: 15px;
-    border-radius: 8px;
-    border-left: 5px solid #38a169;
+    background-color: #e3faf1;
+    color: #117a55;
+    padding: 18px;
+    border-radius: 12px;
+    border-left: 6px solid #2ec4b6;
     text-align: center;
-    font-weight: 600;
-    margin-top: 15px;
+    font-weight: 700;
+    margin-top: 20px;
     font-size: 15px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    box-shadow: 0 4px 12px rgba(46, 196, 182, 0.1);
+    animation: fadeIn 0.3s ease-in-out;
 }
 
-/* REAL-TIME LEADERBOARD TABLE */
+/* ULTRA-MODERN LEADERBOARD TABLE */
 table {
     width: 100%;
     border-collapse: separate;
-    border-spacing: 0;
-    margin-top: 15px;
-    border-radius: 10px;
-    overflow: hidden;
-    border: 1px solid #e2e8f0;
-}
-
-th, td {
-    padding: 14px 16px;
-    text-align: left;
+    border-spacing: 0 8px; /* Jarak antara baris untuk efek terapung */
+    margin-top: 20px;
 }
 
 th {
-    background-color: #ebf8ff;
-    color: #2b6cb0;
-    font-weight: 600;
+    background-color: transparent;
+    color: #627d98;
+    font-weight: 700;
     text-transform: uppercase;
-    font-size: 12px;
-    letter-spacing: 0.5px;
-    border-bottom: 2px solid #bee3f8;
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 10px 16px;
+    border: none;
 }
 
 td {
-    border-bottom: 1px solid #e2e8f0;
-    background-color: #ffffff;
-    font-size: 14px;
+    padding: 16px;
+    background-color: #f8fafc;
+    font-size: 15px;
+    border: 1px solid #e4e7eb;
+    border-style: solid none;
 }
 
-tr:last-child td {
-    border-bottom: none;
+td:first-child {
+    border-left: 1px solid #e4e7eb;
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+
+td:last-child {
+    border-right: 1px solid #e4e7eb;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
 }
 
 tr:hover td {
-    background-color: #f7fafc;
+    background-color: #f0f4f8;
+    border-color: #bcccdc;
+    transform: scale(1.005);
+    transition: all 0.15s ease;
 }
 
-/* PODIUM HIGHLIGHTS */
-tr:nth-child(1) td strong { color: #d69e2e; font-size: 16px; } /* Gold */
-tr:nth-child(2) td strong { color: #718096; font-size: 15px; } /* Silver */
-tr:nth-child(3) td strong { color: #b7791f; font-size: 15px; } /* Bronze */
+/* PODIUM GLAMOUR HIGHLIGHTS */
+tr:nth-child(1) td { background: linear-gradient(90deg, #fffbeb 0%, #ffffff 100%); border-color: #fef3c7; }
+tr:nth-child(1) td strong { background: linear-gradient(135deg, #d97706 0%, #b45309 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 19px; font-weight: 800; }
 
-/* RESPONSIVE BREAKPOINTS */
+tr:nth-child(2) td { background: linear-gradient(90deg, #f8fafc 0%, #ffffff 100%); border-color: #e2e8f0; }
+tr:nth-child(2) td strong { background: linear-gradient(135deg, #64748b 0%, #475569 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 17px; font-weight: 700; }
+
+tr:nth-child(3) td { background: linear-gradient(90deg, #fff7ed 0%, #ffffff 100%); border-color: #ffedd5; }
+tr:nth-child(3) td strong { background: linear-gradient(135deg, #ca8a04 0%, #a16207 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 16px; font-weight: 700; }
+
+/* ANIMATIONS */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* MOBILE RESPONSIVE ADAPTABILITY */
 @media (max-width: 480px) {
-    body {
-        padding: 10px;
-    }
-    .container {
-        padding: 20px;
-    }
-    h1 {
-        font-size: 20px;
-    }
-    th, td {
-        padding: 10px 12px;
-        font-size: 13px;
-    }
+    body { padding: 15px 10px; }
+    .container { padding: 25px 15px; border-radius: 20px; }
+    h1 { font-size: 22px; }
+    h2 { font-size: 18px; }
+    th, td { padding: 12px 10px; font-size: 13px; }
 }
