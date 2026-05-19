@@ -8,6 +8,43 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <style>
+        /* Gaya Butang Delete Sukan HUD */
+        .btn-delete {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 75, 75, 0.15);
+            border: 1px solid rgba(255, 75, 75, 0.4);
+            color: #ff4b4b;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+        .btn-delete:hover {
+            background: #ff4b4b;
+            color: #ffffff;
+            box-shadow: 0 0 10px rgba(255, 75, 75, 0.6);
+            transform: scale(1.1);
+        }
+        /* Larasan untuk delete button pada komponen pill */
+        .pill-delete {
+            position: relative;
+            top: unset;
+            right: unset;
+            margin-left: 8px;
+            width: 18px;
+            height: 18px;
+            font-size: 8px;
+        }
+    </style>
 </head>
 <body>
 
@@ -85,6 +122,19 @@
 
         const trackingRef = database.ref('tracking/');
 
+        // Fungsi Utama untuk Padam Runner ID dari Firebase
+        function deleteRunner(runnerId) {
+            if (confirm(`Adakah anda pasti mahu memadam Runner ID: ${runnerId}?`)) {
+                database.ref('tracking/' + runnerId).remove()
+                .then(() => {
+                    alert(`Runner ID: ${runnerId} berjaya dipadam!`);
+                })
+                .catch((error) => {
+                    console.error("Gagal memadam data:", error);
+                });
+            }
+        }
+
         trackingRef.on('value', (snapshot) => {
             const data = snapshot.val();
             if (data) {
@@ -102,45 +152,47 @@
                 
                 podiumRoot.innerHTML = "";
                 
-                // Pisahkan Top 3 untuk layout kartu premium dan sisa pelari di bawahnya
                 let topThreeHTML = '<div class="podium-grid">';
                 let generalRowsHTML = '<div class="sub-runners-list">';
                 
                 runnersArray.forEach((runner, index) => {
+                    // Tukar sebut harga single quote ke entiti HTML untuk elakkan ralat nama pelari bermasalah teks
+                    const safeId = runner.runner_id.replace(/'/g, "\\'");
+
                     if (index === 0) {
-                        // Juara 1: Kartu Emas Menyala Hebat
                         topThreeHTML += `
                             <div class="podium-card rank-1-gold">
+                                <button class="btn-delete" onclick="deleteRunner('${safeId}')">❌</button>
                                 <div class="card-rank-badge font-orbitron"><span class="emoji-crown">👑</span> #1</div>
                                 <div class="card-runner-id">${runner.runner_id}</div>
                                 <div class="card-time-meta">Cleared ⏱️ ${runner.recorded_time}</div>
                             </div>
                         `;
                     } else if (index === 1) {
-                        // Juara 2: Biru Neon Perak
                         topThreeHTML += `
                             <div class="podium-card rank-2-silver">
+                                <button class="btn-delete" onclick="deleteRunner('${safeId}')">❌</button>
                                 <div class="card-rank-badge font-orbitron">🥈 #2</div>
                                 <div class="card-runner-id">${runner.runner_id}</div>
                                 <div class="card-time-meta">Cleared ⏱️ ${runner.recorded_time}</div>
                             </div>
                         `;
                     } else if (index === 2) {
-                        // Juara 3: Jingga Perunggu
                         topThreeHTML += `
                             <div class="podium-card rank-3-bronze">
+                                <button class="btn-delete" onclick="deleteRunner('${safeId}')">❌</button>
                                 <div class="card-rank-badge font-orbitron">🥉 #3</div>
                                 <div class="card-runner-id">${runner.runner_id}</div>
                                 <div class="card-time-meta">Cleared ⏱️ ${runner.recorded_time}</div>
                             </div>
                         `;
                     } else {
-                        // Peringkat 4 ke bawah menggunakan badge pill kecil
                         generalRowsHTML += `
                             <div class="runner-pill">
                                 <span class="pill-rank">#${index + 1}</span>
                                 <span class="pill-id">${runner.runner_id}</span>
                                 <span class="pill-time">⏱️ ${runner.recorded_time}</span>
+                                <button class="btn-delete pill-delete" onclick="deleteRunner('${safeId}')">❌</button>
                             </div>
                         `;
                     }
