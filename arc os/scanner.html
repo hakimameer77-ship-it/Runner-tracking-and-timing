@@ -1,19 +1,22 @@
 <!DOCTYPE html>
-<html lang="ms">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Imbasan QR Petugas</title>
+    <title>Marshal QR Scanning Portal</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://unpkg.com/html5-qrcode"></script>
 </head>
 <body>
     <div class="container">
-        <a href="index.html" style="text-decoration: none; color: #3182ce;">← Kembali</a>
-        <h2>Imbasan Checkpoint / Garisan Penamat</h2>
+        <a href="index.html" style="text-decoration: none; color: #3182ce;">← Back to Main Menu</a>
+        <h2>Checkpoint / Finish Line Scanner</h2>
+        
         <div id="reader"></div>
-        <div id="result" class="success-msg"></div>
+        
+        <div id="result" class="success-msg" style="display: none;"></div>
     </div>
+
     <script type="module" src="scanner.js"></script>
 </body>
 </html>
