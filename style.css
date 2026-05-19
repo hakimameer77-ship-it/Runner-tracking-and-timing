@@ -1,215 +1,394 @@
-/* ==========================================================================
-   PREMIUM SPORT TIMING SYSTEM THEME (ELECTRIC NEON DESIGN)
-   ========================================================================== */
-
+/* CSS RESET & VARIAN GLOBAL BASE */
 * {
-    box-shadow: none;
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
 body {
-    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
-    background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
-    color: #102a43;
-    padding: 40px 20px;
+    font-family: 'Rajdhani', sans-serif;
+    background-color: #050b14;
+    color: #ffffff;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
 }
 
-.container {
+/* Latar Belakang Stadium dengan Efek Gelap Gradien Berkilau Cyberpunk */
+.stadium-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    max-width: 680px;
-    background: #ffffff;
-    padding: 40px;
+    height: 100%;
+    background-image: linear-gradient(rgba(5, 11, 20, 0.85), rgba(10, 25, 47, 0.9)), 
+                      url('https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=1600&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    filter: blur(2px);
+    z-index: -1;
+}
+
+/* Container Utama Kaca Melengkung Transparan */
+.main-container {
+    width: 95%;
+    max-width: 1100px;
+    background: rgba(10, 25, 47, 0.65);
+    border: 2px solid rgba(25, 130, 196, 0.3);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
     border-radius: 24px;
-    box-shadow: 0 20px 40px rgba(16, 42, 67, 0.06), 0 1px 3px rgba(0, 0, 0, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.8);
+    padding: 35px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 
+                inset 0 0 30px rgba(25, 130, 196, 0.15);
+    animation: containerFadeIn 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.font-orbitron {
+    font-family: 'Orbitron', sans-serif;
+}
+
+/* Header Utama */
+.main-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.glow-text {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    color: #ffffff;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+}
+
+.glow-text .highlight {
+    color: #ffb703;
+    text-shadow: 0 0 20px rgba(255, 183, 3, 0.6);
+}
+
+.subtitle {
+    font-size: 14px;
+    color: #8892b0;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+/* Judul Kecil Untuk Setiap Panel Seksi */
+.panel-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: #8892b0;
+    text-align: center;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.panel-title::before, .panel-title::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 80px;
+    height: 1px;
+    background: rgba(136, 146, 176, 0.3);
+}
+
+.panel-title::before { left: 15%; }
+.panel-title::after { right: 15%; }
+
+/* Panel Statistik Komponen Atas */
+.live-stats-container {
+    margin-bottom: 35px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.stat-card {
+    background: rgba(2, 12, 27, 0.8);
+    border-radius: 16px;
+    padding: 18px 25px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
     transition: all 0.3s ease;
 }
 
-h1 {
-    font-size: 28px;
-    background: linear-gradient(135deg, #0b69a3 0%, #032b45 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-align: center;
-    margin-bottom: 10px;
-    font-weight: 800;
-    letter-spacing: -0.5px;
+.cyan-glow { border: 1.5px solid rgba(0, 245, 212, 0.4); box-shadow: 0 0 15px rgba(0, 245, 212, 0.05); }
+.red-glow { border: 1.5px solid rgba(255, 75, 75, 0.4); box-shadow: 0 0 15px rgba(255, 75, 75, 0.05); }
+
+.stat-icon-wrap {
+    font-size: 26px;
+    background: rgba(255, 255, 255, 0.05);
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
 }
 
-h2 {
-    font-size: 22px;
-    color: #1982c4;
-    text-align: center;
-    margin-top: 15px;
-    margin-bottom: 25px;
-    font-weight: 700;
-    letter-spacing: -0.3px;
-}
-
-p {
-    font-size: 15px;
-    color: #486581;
-    line-height: 1.6;
-    text-align: center;
-}
-
-.btn-nav {
+.stat-info {
     display: flex;
     flex-direction: column;
-    gap: 18px;
-    margin-top: 35px;
+}
+
+.stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #8892b0;
+    letter-spacing: 1px;
+}
+
+.stat-number {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: #00f5d4;
+    text-shadow: 0 0 10px rgba(0, 245, 212, 0.4);
+}
+
+.stat-number.highlight-red {
+    color: #ff4b4b;
+    text-shadow: 0 0 10px rgba(255, 75, 75, 0.4);
+}
+
+/* Papan Jalur Utama / Podium Grid */
+.leaderboard-container {
+    margin-bottom: 35px;
+}
+
+.podium-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.podium-card {
+    background: rgba(2, 12, 27, 0.9);
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: transform 0.3s ease;
+}
+
+.podium-card:hover {
+    transform: translateY(-4px);
+}
+
+/* Styling Juara Peringkat */
+.rank-1-gold {
+    border: 2px solid #ffb703;
+    box-shadow: 0 0 25px rgba(255, 183, 3, 0.25);
+    background: linear-gradient(135deg, rgba(2, 12, 27, 0.95) 0%, rgba(255, 183, 3, 0.05) 100%);
+}
+
+.rank-1-gold .card-rank-badge {
+    color: #ffb703;
+    font-size: 28px;
+    font-weight: 900;
+    text-shadow: 0 0 15px rgba(255, 183, 3, 0.5);
+}
+
+.rank-1-gold .card-runner-id {
+    font-size: 32px;
+    color: #ffffff;
+}
+
+.rank-2-silver {
+    border: 1.5px solid #00b4d8;
+    box-shadow: 0 0 20px rgba(0, 180, 216, 0.15);
+}
+
+.rank-2-silver .card-rank-badge {
+    color: #00b4d8;
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.rank-3-bronze {
+    border: 1.5px solid #fb8500;
+    box-shadow: 0 0 20px rgba(251, 133, 0, 0.15);
+}
+
+.rank-3-bronze .card-rank-badge {
+    color: #fb8500;
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.card-rank-badge {
+    margin-bottom: 5px;
+}
+
+.emoji-crown {
+    font-size: 24px;
+    display: inline-block;
+    animation: pulseCrown 2s infinite alternate;
+}
+
+.card-runner-id {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: #e2e8f0;
+    margin: 5px 0;
+}
+
+.card-time-meta {
+    font-size: 13px;
+    color: #8892b0;
+    font-weight: 600;
+}
+
+/* Sisa Pelari Peringkat #4 Kebawah (Pill Horisontal Minimalis Gaya HUD) */
+.sub-runners-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    background: rgba(2, 12, 27, 0.5);
+    padding: 15px;
+    border-radius: 14px;
+    border: 1px solid rgba(136, 146, 176, 0.1);
+}
+
+.runner-pill {
+    background: rgba(10, 25, 47, 0.8);
+    border: 1px solid rgba(0, 180, 216, 0.3);
+    padding: 6px 14px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.runner-pill:hover {
+    border-color: #00f5d4;
+    background: rgba(0, 245, 212, 0.05);
+}
+
+.pill-rank {
+    color: #00b4d8;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.pill-id {
+    color: #ffffff;
+}
+
+.pill-time {
+    color: #8892b0;
+    font-size: 11px;
+}
+
+/* Tombol Menu Kontrol Navigasi */
+.control-navigation {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 15px;
 }
 
 .btn {
-    display: inline-block;
-    padding: 16px 24px;
-    background: linear-gradient(135deg, #1982c4 0%, #0b69a3 100%);
-    color: #ffffff;
-    text-decoration: none;
-    border-radius: 14px;
-    font-weight: 600;
-    font-size: 15px;
-    text-align: center;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(25, 130, 196, 0.2);
-    letter-spacing: 0.2px;
-}
-
-.btn:hover {
-    background: linear-gradient(135deg, #2292d7 0%, #1279b5 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(25, 130, 196, 0.3);
-}
-
-.btn:active {
-    transform: translateY(1px);
-    box-shadow: 0 2px 6px rgba(25, 130, 196, 0.2);
-}
-
-#reader {
-    width: 100%;
-    border: 3px dashed #bcccdc !important;
-    border-radius: 20px;
-    overflow: hidden;
-    background: #f0f4f8;
-    margin: 25px 0;
-    padding: 10px;
-    transition: border-color 0.3s ease;
-}
-
-#reader:hover {
-    border-color: #1982c4 !important;
-}
-
-#reader video {
-    border-radius: 14px;
-}
-
-#reader button {
-    padding: 12px 24px;
-    background: #486581;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 14px;
-    margin: 15px auto;
-    display: block;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-}
-
-#reader button:hover {
-    background: #334e68;
-    transform: translateY(-1px);
-}
-
-.success-msg {
-    background-color: #e3faf1;
-    color: #117a55;
-    padding: 18px;
-    border-radius: 12px;
-    border-left: 6px solid #2ec4b6;
-    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
     font-weight: 700;
-    margin-top: 20px;
-    font-size: 15px;
-    box-shadow: 0 4px 12px rgba(46, 196, 182, 0.1);
-    animation: fadeIn 0.3s ease-in-out;
-}
-
-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 8px;
-    margin-top: 20px;
-}
-
-th {
-    background-color: transparent;
-    color: #627d98;
-    font-weight: 700;
-    text-transform: uppercase;
-    font-size: 11px;
     letter-spacing: 1px;
-    padding: 10px 16px;
-    border: none;
+    text-decoration: none;
+    padding: 16px 20px;
+    border-radius: 12px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-td {
-    padding: 16px;
-    background-color: #f8fafc;
-    font-size: 15px;
-    border: 1px solid #e4e7eb;
-    border-style: solid none;
+.btn-cyan {
+    background: linear-gradient(135deg, #0077b6 0%, #00b4d8 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 15px rgba(0, 180, 216, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-td:first-child {
-    border-left: 1px solid #e4e7eb;
-    border-top-left-radius: 12px;
-    border-bottom-left-radius: 12px;
+.btn-cyan:hover {
+    box-shadow: 0 0 25px rgba(0, 245, 212, 0.5);
+    transform: translateY(-2px);
 }
 
-td:last-child {
-    border-right: 1px solid #e4e7eb;
-    border-top-right-radius: 12px;
-    border-bottom-right-radius: 12px;
+.btn-gold {
+    background: linear-gradient(135deg, #102a43 0%, #020c1b 100%);
+    color: #ffb703;
+    border: 1.5px solid #ffb703;
+    box-shadow: 0 4px 15px rgba(255, 183, 3, 0.1);
 }
 
-tr:hover td {
-    background-color: #f0f4f8;
-    border-color: #bcccdc;
-    transform: scale(1.005);
-    transition: all 0.15s ease;
+.btn-gold:hover {
+    background: rgba(255, 183, 3, 0.1);
+    box-shadow: 0 0 25px rgba(255, 183, 3, 0.3);
+    transform: translateY(-2px);
 }
 
-tr:nth-child(1) td { background: linear-gradient(90deg, #fffbeb 0%, #ffffff 100%); border-color: #fef3c7; }
-tr:nth-child(1) td strong { background: linear-gradient(135deg, #d97706 0%, #b45309 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 19px; font-weight: 800; }
-
-tr:nth-child(2) td { background: linear-gradient(90deg, #f8fafc 0%, #ffffff 100%); border-color: #e2e8f0; }
-tr:nth-child(2) td strong { background: linear-gradient(135deg, #64748b 0%, #475569 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 17px; font-weight: 700; }
-
-tr:nth-child(3) td { background: linear-gradient(90deg, #fff7ed 0%, #ffffff 100%); border-color: #ffedd5; }
-tr:nth-child(3) td strong { background: linear-gradient(135deg, #ca8a04 0%, #a16207 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 16px; font-weight: 700; }
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+.btn-icon {
+    font-size: 14px;
 }
 
-@media (max-width: 480px) {
-    body { padding: 15px 10px; }
-    .container { padding: 25px 15px; border-radius: 20px; }
-    h1 { font-size: 22px; }
-    h2 { font-size: 18px; }
-    th, td { padding: 12px 10px; font-size: 13px; }
+/* Teks Footer */
+.footer-credit {
+    text-align: center;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: #486581;
+    margin-top: 25px;
+    font-weight: 700;
+}
+
+.loading-text {
+    text-align: center;
+    color: #8892b0;
+    font-weight: 500;
+    padding: 20px;
+}
+
+/* ANIMASI KEYFRAMES */
+@keyframes containerFadeIn {
+    from { opacity: 0; transform: scale(0.96) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes pulseCrown {
+    0% { transform: scale(1) rotate(-5deg); }
+    100% { transform: scale(1.15) rotate(5deg); }
+}
+
+/* RESPONSIVE LAYOUT (MOBILE OPTIMIZED) */
+@media (max-width: 768px) {
+    .main-container { padding: 20px; }
+    .glow-text { font-size: 18px; }
+    .stats-grid { grid-template-columns: 1fr; gap: 10px; }
+    .podium-grid { grid-template-columns: 1fr; gap: 12px; }
+    .control-navigation { grid-template-columns: 1fr; gap: 10px; }
+    .rank-1-gold .card-runner-id { font-size: 26px; }
 }
