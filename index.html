@@ -5,28 +5,161 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Runner Tracking & Timing System</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Runner Tracking & Timing System</h1>
-        <p style="margin-bottom: 35px;">
-            Race Timing & Management Platform Powered by QR Codes & Firebase Real-Time Cloud
-        </p>
-        
-        <div class="btn-nav">
-            <a href="scanner.html" class="btn">
-                📢 Checkpoint Marshal Portal (Open Scanner)
-            </a>
-            <a href="leaderboard.html" class="btn" style="background: linear-gradient(135deg, #102a43 0%, #032b45 100%); box-shadow: 0 4px 12px rgba(16, 42, 67, 0.15);">
-                🏆 Official Standings (Live Leaderboard)
-            </a>
-        </div>
 
-        <div style="margin-top: 45px; text-align: center; border-top: 1px solid #e4e7eb; padding-top: 20px;">
-            <span style="font-size: 11px; color: #9fb3c8; letter-spacing: 1px; text-transform: uppercase; font-weight: 600;">
-                Powered by GitHub Pages & Firebase
-            </span>
-        </div>
+    <div class="stadium-overlay"></div>
+
+    <div class="main-container">
+        
+        <header class="main-header">
+            <h1 class="glow-text">RUNNER TRACKING & TIMING SYSTEM: <span class="highlight">FINAL STANDINGS</span></h1>
+            <p class="subtitle">Powered by Firebase Live Cloud & QR Scan Technology</p>
+        </header>
+
+        <section class="live-stats-container">
+            <div class="panel-title">LIVE STATISTICS COUNTER</div>
+            <div class="stats-grid">
+                <div class="stat-card cyan-glow">
+                    <div class="stat-icon-wrap">
+                        <span class="stat-icon">🏃‍♂️</span>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">TOTAL RUNNERS CHECKED</span>
+                        <span class="stat-number" id="stat-total">0</span>
+                    </div>
+                </div>
+                <div class="stat-card red-glow">
+                    <div class="stat-icon-wrap">
+                        <span class="stat-icon">🔥</span>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">LATEST ACTIVE PING</span>
+                        <span class="stat-number highlight-red" id="stat-latest">NONE</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="leaderboard-container">
+            <div class="panel-title">OFFICIAL LIVE LEADERBOARD</div>
+            
+            <div id="leaderboard-podium-root">
+                <div class="loading-text">Menunggu inisialisasi data dari pos lintasan...</div>
+            </div>
+        </section>
+
+        <footer class="control-navigation">
+            <a href="scanner.html" class="btn btn-cyan">
+                <span class="btn-icon">🔔</span> CHECKPOINT MARSHAL PORTAL (OPEN SCANNER)
+            </a>
+            <a href="leaderboard.html" class="btn btn-gold">
+                <span class="btn-icon">🏆</span> OFFICIAL STANDINGS (LIVE LEADERBOARD)
+            </a>
+        </footer>
+        
+        <div class="footer-credit">POWERED BY GITHUB PAGES & FIREBASE</div>
     </div>
+
+    <script>
+        const firebaseConfig = {
+          apiKey: "AIzaSyAMThjhhw7jWb2pvYz5OFcnvMiTt6-Co",
+          authDomain: "runner-system.firebaseapp.com",
+          databaseURL: "https://runner-system-default-rtdb.firebaseio.com",
+          projectId: "runner-system",
+          storageBucket: "runner-system.firebasestorage.app",
+          messagingSenderId: "420895973613",
+          appId: "1:420895973613:web:5842b54c9fe82e061face4",
+          measurementId: "G-2XH1NE0EPT"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        
+        const podiumRoot = document.getElementById('leaderboard-podium-root');
+        const statTotal = document.getElementById('stat-total');
+        const statLatest = document.getElementById('stat-latest');
+
+        const trackingRef = database.ref('tracking/');
+
+        trackingRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                let runnersArray = Object.values(data);
+                
+                // Urutkan berdasarkan waktu terkecil (Tercepat di atas)
+                runnersArray.sort((a, b) => a.raw_time - b.raw_time);
+                
+                // Pelari paling update terakhir masuk
+                let latestRunner = [...runnersArray].sort((a,b) => b.raw_time - a.raw_time)[0];
+                
+                // Update statistik counter atas
+                statTotal.innerText = runnersArray.length;
+                statLatest.innerText = `${latestRunner.runner_id} (${latestRunner.recorded_time})`;
+                
+                podiumRoot.innerHTML = "";
+                
+                // Pisahkan Top 3 untuk layout kartu premium dan sisa pelari di bawahnya
+                let topThreeHTML = '<div class="podium-grid">';
+                let generalRowsHTML = '<div class="sub-runners-list">';
+                
+                runnersArray.forEach((runner, index) => {
+                    if (index === 0) {
+                        // Juara 1: Kartu Emas Menyala Hebat
+                        topThreeHTML += `
+                            <div class="podium-card rank-1-gold">
+                                <div class="card-rank-badge font-orbitron"><span class="emoji-crown">👑</span> #1</div>
+                                <div class="card-runner-id">${runner.runner_id}</div>
+                                <div class="card-time-meta">Cleared ⏱️ ${runner.recorded_time}</div>
+                            </div>
+                        `;
+                    } else if (index === 1) {
+                        // Juara 2: Biru Neon Perak
+                        topThreeHTML += `
+                            <div class="podium-card rank-2-silver">
+                                <div class="card-rank-badge font-orbitron">🥈 #2</div>
+                                <div class="card-runner-id">${runner.runner_id}</div>
+                                <div class="card-time-meta">Cleared ⏱️ ${runner.recorded_time}</div>
+                            </div>
+                        `;
+                    } else if (index === 2) {
+                        // Juara 3: Jingga Perunggu
+                        topThreeHTML += `
+                            <div class="podium-card rank-3-bronze">
+                                <div class="card-rank-badge font-orbitron">🥉 #3</div>
+                                <div class="card-runner-id">${runner.runner_id}</div>
+                                <div class="card-time-meta">Cleared ⏱️ ${runner.recorded_time}</div>
+                            </div>
+                        `;
+                    } else {
+                        // Peringkat 4 ke bawah menggunakan badge pill kecil
+                        generalRowsHTML += `
+                            <div class="runner-pill">
+                                <span class="pill-rank">#${index + 1}</span>
+                                <span class="pill-id">${runner.runner_id}</span>
+                                <span class="pill-time">⏱️ ${runner.recorded_time}</span>
+                            </div>
+                        `;
+                    }
+                });
+                
+                topThreeHTML += '</div>';
+                generalRowsHTML += '</div>';
+                
+                podiumRoot.innerHTML = topThreeHTML;
+                if(runnersArray.length > 3) {
+                    podiumRoot.innerHTML += generalRowsHTML;
+                }
+                
+            } else {
+                statTotal.innerText = "0";
+                statLatest.innerText = "NONE";
+                podiumRoot.innerHTML = '<div class="loading-text">Menunggu inisialisasi data dari pos lintasan...</div>';
+            }
+        });
+    </script>
 </body>
 </html>
