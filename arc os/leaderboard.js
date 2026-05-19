@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-// TODO: Paste your personalized configuration values from the Firebase Web App Console screen here
+// Official verified configuration from your Firebase App Console
 const firebaseConfig = {
   apiKey: "AIzaSyAMThjhhw7jWb2pvYz5OFcnvMiTt6-Co",
   authDomain: "runner-system.firebaseapp.com",
@@ -13,27 +13,27 @@ const firebaseConfig = {
   measurementId: "G-2XH1NE0EPT"
 };
 
-// Initialize App Services
+// Initialize Firebase App & Database Services
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const leaderboardTable = document.getElementById('leaderboard-data');
 
 const trackingRef = ref(database, 'tracking/');
 
-// Subscribing to Cloud Tree alterations
+// Actively listen to real-time additions or adjustments in the cloud
 onValue(trackingRef, (snapshot) => {
     const data = snapshot.val();
     if (data) {
-        // Transform JSON tree schema into standard sortable linear arrays
+        // Map data structure into an array format
         let runnersArray = Object.values(data);
         
-        // Sorting ascending using relative unix time indexes
+        // Sort ascending using the raw chronological unix stamp (Fastest runners first)
         runnersArray.sort((a, b) => a.raw_time - b.raw_time);
         
-        // Emptying placeholder text content rows
+        // Clear previous table viewport records before iterating
         leaderboardTable.innerHTML = "";
         
-        // Dynamic Table Row injection lifecycle loop
+        // Construct and append layout strings rows live
         runnersArray.forEach((runner, index) => {
             let row = `<tr>
                 <td><strong>#${index + 1}</strong></td>
@@ -43,6 +43,6 @@ onValue(trackingRef, (snapshot) => {
             leaderboardTable.innerHTML += row;
         });
     } else {
-        leaderboardTable.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #999;">No logged tracking records discovered.</td></tr>`;
+        leaderboardTable.innerHTML = `<tr><td colspan="3" style="text-align: center; color: #999;">Awaiting initialization parameters from checkpoint marshals...</td></tr>`;
     }
 });
