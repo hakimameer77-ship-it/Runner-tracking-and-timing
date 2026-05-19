@@ -1,1 +1,17 @@
+graph LR
+    subgraph Edge_Layer [Input Layer]
+        QR[Runner QR Code] --> Scan[Scanner Portal - HTML5]
+    end
 
+    subgraph Cloud_Layer [Processing Layer]
+        Scan --> DB[(Firebase Realtime DB)]
+    end
+
+    subgraph Output_Layer [Visualization Layer]
+        DB --> Dashboard[Live Leaderboard UI]
+        Dashboard --> Display[Public/Stadium Screen]
+    end
+
+    style DB fill:#f9f,stroke:#333,stroke-width:4px
+    style Scan fill:#00d4ff,stroke:#fff
+    style Dashboard fill:#ffb703,stroke:#fff
