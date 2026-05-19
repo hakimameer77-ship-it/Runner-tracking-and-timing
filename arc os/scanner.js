@@ -1,6 +1,4 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
+// Konfigurasi rasmi daripada Firebase App Console
 const firebaseConfig = {
   apiKey: "AIzaSyAMThjhhw7jWb2pvYz5OFcnvMiTt6-Co",
   authDomain: "runner-system.firebaseapp.com",
@@ -12,8 +10,9 @@ const firebaseConfig = {
   measurementId: "G-2XH1NE0EPT"
 };
 
-const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
+// Menggunakan kaedah inisialisasi compat universal
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
 
 function onScanSuccess(decodedText, decodedResult) {
     const runnerId = decodedText;
@@ -26,12 +25,13 @@ function onScanSuccess(decodedText, decodedResult) {
     resultDiv.style.display = "block";
     resultDiv.innerText = `Logged Successfully! Runner ID: ${runnerId} at ${timestamp}`;
 
-    set(ref(database, 'tracking/' + runnerId), {
+    // Menghantar data ke cawangan laluan 'tracking'
+    database.ref('tracking/' + runnerId).set({
         runner_id: runnerId,
         recorded_time: timestamp,
         raw_time: rawTime
     }).catch((error) => {
-        console.error("Database cloud write error caught:", error);
+        console.error("Gagal menghantar data ke Firebase:", error);
     });
 }
 
