@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marshal QR Scanning Portal</title>
     <link rel="stylesheet" href="style.css">
+    
     <script src="https://unpkg.com/html5-qrcode"></script>
+    
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 </head>
 <body>
     <div class="container">
@@ -17,6 +21,6 @@
         <div id="result" class="success-msg" style="display: none;"></div>
     </div>
 
-    <script type="module" src="scanner.js"></script>
+    <script src="scanner.js"></script>
 </body>
 </html>
