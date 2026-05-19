@@ -2,7 +2,6 @@
    PREMIUM SPORT TIMING SYSTEM THEME (ELECTRIC NEON DESIGN)
    ========================================================================== */
 
-/* RESET & CORE BASE */
 * {
     box-shadow: none;
     box-sizing: border-box;
@@ -21,7 +20,6 @@ body {
     min-height: 100vh;
 }
 
-/* MODERN FLOATING CONTAINER */
 .container {
     width: 100%;
     max-width: 680px;
@@ -33,7 +31,6 @@ body {
     transition: all 0.3s ease;
 }
 
-/* HIGH-IMPACT TYPOGRAPHY */
 h1 {
     font-size: 28px;
     background: linear-gradient(135deg, #0b69a3 0%, #032b45 100%);
@@ -62,7 +59,6 @@ p {
     text-align: center;
 }
 
-/* PREMIUM ACTION BUTTONS */
 .btn-nav {
     display: flex;
     flex-direction: column;
@@ -83,22 +79,21 @@ p {
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     border: none;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(25px, 130, 196, 0.2);
+    box-shadow: 0 4px 12px rgba(25, 130, 196, 0.2);
     letter-spacing: 0.2px;
 }
 
 .btn:hover {
     background: linear-gradient(135deg, #2292d7 0%, #1279b5 100%);
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(25px, 130, 196, 0.3);
+    box-shadow: 0 8px 20px rgba(25, 130, 196, 0.3);
 }
 
 .btn:active {
     transform: translateY(1px);
-    box-shadow: 0 2px 6px rgba(25px, 130, 196, 0.2);
+    box-shadow: 0 2px 6px rgba(25, 130, 196, 0.2);
 }
 
-/* NEON SCANNER SHIELD UI */
 #reader {
     width: 100%;
     border: 3px dashed #bcccdc !important;
@@ -138,7 +133,6 @@ p {
     transform: translateY(-1px);
 }
 
-/* CYBER GLOW SUCCESS TOAST */
 .success-msg {
     background-color: #e3faf1;
     color: #117a55;
@@ -153,11 +147,10 @@ p {
     animation: fadeIn 0.3s ease-in-out;
 }
 
-/* ULTRA-MODERN LEADERBOARD TABLE */
 table {
     width: 100%;
     border-collapse: separate;
-    border-spacing: 0 8px; /* Memberi efek baris terapung */
+    border-spacing: 0 8px;
     margin-top: 20px;
 }
 
@@ -199,7 +192,6 @@ tr:hover td {
     transition: all 0.15s ease;
 }
 
-/* HIGH-GLOSS PODIUM HIGHLIGHTS */
 tr:nth-child(1) td { background: linear-gradient(90deg, #fffbeb 0%, #ffffff 100%); border-color: #fef3c7; }
 tr:nth-child(1) td strong { background: linear-gradient(135deg, #d97706 0%, #b45309 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 19px; font-weight: 800; }
 
@@ -209,13 +201,11 @@ tr:nth-child(2) td strong { background: linear-gradient(135deg, #64748b 0%, #475
 tr:nth-child(3) td { background: linear-gradient(90deg, #fff7ed 0%, #ffffff 100%); border-color: #ffedd5; }
 tr:nth-child(3) td strong { background: linear-gradient(135deg, #ca8a04 0%, #a16207 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 16px; font-weight: 700; }
 
-/* ANIMATIONS */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* MOBILE RESPONSIVE ADAPTABILITY */
 @media (max-width: 480px) {
     body { padding: 15px 10px; }
     .container { padding: 25px 15px; border-radius: 20px; }
