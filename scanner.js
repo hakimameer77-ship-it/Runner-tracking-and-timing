@@ -12,7 +12,6 @@ const firebaseConfig = {
 if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
-// Bunyi Beep apabila berjaya imbas
 const beep = document.getElementById("beep-sound");
 
 function onScanSuccess(decodedText) {
@@ -23,40 +22,54 @@ function onScanSuccess(decodedText) {
     if (beep) beep.play().catch(e => console.log("Audio play blocked"));
 
     runnerRef.once('value').then((snapshot) => {
-        const data = snapshot.val();
+        const data = snapshot.val() || {};
         const now = Date.now();
 
-        if (station === 'checkpoint') {
-            // Logik Mula Kira Masa di Checkpoint
+        if (station === 'start') {
+            // Mula Kira Masa dari Sini
             runnerRef.set({
                 runner_id: runnerId,
-                checkpoint_time: now,
+                start_time: now,
                 status: 'In Progress',
-                recorded_time: '🏃‍♂️ Running...',
-                elapsed_time: Infinity // Letak nilai tinggi supaya pelari belum tamat berada di bawah leaderboard
+                recorded_time: '🏃‍♂️ Racing...',
+                elapsed_time: Infinity
             });
-            alert(`Runner ${runnerId}: Checkpoint Berjaya Direkod! Masa mula dikira.`);
+            alert(`Runner ${runnerId}: START recorded! Time has started.`);
         } 
+        else if (station === 'checkpoint1') {
+            if (!data.start_time) {
+                alert(`⚠️ ERROR: Runner ${runnerId} has NOT scanned at START yet!`);
+                return;
+            }
+            runnerRef.update({
+                checkpoint1_time: now,
+                status: 'Passed Checkpoint 1'
+            });
+            alert(`Runner ${runnerId}: Checkpoint 1 cleared!`);
+        }
+        else if (station === 'checkpoint2') {
+            if (!data.start_time) {
+                alert(`⚠️ ERROR: Runner ${runnerId} has NOT scanned at START yet!`);
+                return;
+            }
+            runnerRef.update({
+                checkpoint2_time: now,
+                status: 'Passed Checkpoint 2'
+            });
+            alert(`Runner ${runnerId}: Checkpoint 2 cleared!`);
+        }
         else if (station === 'finish') {
-            // Logik Tamat Perlumbaan & Kira Durasi Masa
-            if (!data || !data.checkpoint_time) {
-                alert(`⚠️ RALAT: Pelari ${runnerId} BELUM mengimbas di Checkpoint 1! Masa tidak dapat dikira.`);
+            if (!data.start_time) {
+                alert(`⚠️ ERROR: Runner ${runnerId} has NOT scanned at START yet!`);
                 return;
             }
 
-            if (data.status === 'Finished') {
-                if (!confirm(`Pelari ${runnerId} sudah ada rekod penamat. Anda mahu overwrite masa baru?`)) {
-                    return;
-                }
-            }
+            const elapsedMs = now - data.start_time;
 
-            const elapsedMs = now - data.checkpoint_time;
-
-            // Tukar Milisaat (ms) kepada format Jam:Minit:Saat (HH:MM:SS)
+            // Format milliseconds ke HH:MM:SS
             const hours = Math.floor(elapsedMs / 3600000);
             const minutes = Math.floor((elapsedMs % 3600000) / 60000);
             const seconds = Math.floor((elapsedMs % 60000) / 1000);
-            
             const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
             runnerRef.update({
@@ -66,7 +79,7 @@ function onScanSuccess(decodedText) {
                 status: 'Finished'
             });
 
-            alert(`🏁 TAHNIAH! Runner ${runnerId} Tamat. Masa: ${formattedTime}`);
+            alert(`🏆 FINISH! Runner ${runnerId} completed. Time: ${formattedTime}`);
         }
     }).catch((error) => {
         console.error("Firebase Error:", error);
