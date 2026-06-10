@@ -10,12 +10,44 @@
     
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <style>
+        /* Gaya tambahan untuk pilihan stesen */
+        .station-selector {
+            margin: 15px 0 25px 0;
+            text-align: left;
+        }
+        .station-selector label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1982c4;
+        }
+        .station-selector select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            background: #ffffff;
+            color: #102a43;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <a href="index.html" style="text-decoration: none; color: #1982c4; font-weight: 600; font-size: 14px;">← Back to Main Menu</a>
         <h2>Checkpoint / Finish Line Scanner</h2>
         
+        <div class="station-selector">
+            <label for="scan-station">PILIH STESEN IMBASAN:</label>
+            <select id="scan-station">
+                <option value="checkpoint">👉 CHECKPOINT 1 (Mula Kira Masa)</option>
+                <option value="finish">🏁 FINISH LINE (Tamat & Kira Tempoh)</option>
+            </select>
+        </div>
+
         <div id="reader"></div>
         
         <div id="result" class="success-msg" style="display: none;"></div>
