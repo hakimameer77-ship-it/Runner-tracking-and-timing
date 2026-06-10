@@ -1,107 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Runner Tracking & Timing System</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-    <style>
-        /* Gaya Butang Delete Sukan HUD */
-        .btn-delete {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(255, 75, 75, 0.15);
-            border: 1px solid rgba(255, 75, 75, 0.4);
-            color: #ff4b4b;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            font-size: 10px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-            z-index: 10;
-        }
-        .btn-delete:hover {
-            background: #ff4b4b;
-            color: #ffffff;
-            box-shadow: 0 0 10px rgba(255, 75, 75, 0.6);
-            transform: scale(1.1);
-        }
-        /* Larasan untuk delete button pada komponen pill */
-        .pill-delete {
-            position: relative;
-            top: unset;
-            right: unset;
-            margin-left: 8px;
-            width: 18px;
-            height: 18px;
-            font-size: 8px;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="stadium-overlay"></div>
-
-    <div class="main-container">
-        
-        <header class="main-header">
-            <h1 class="glow-text">RUNNER TRACKING & TIMING SYSTEM: <span class="highlight">FINAL STANDINGS</span></h1>
-            <p class="subtitle">Powered by Firebase Live Cloud & QR Scan Technology</p>
-        </header>
-
-        <section class="live-stats-container">
-            <div class="panel-title">LIVE STATISTICS COUNTER</div>
-            <div class="stats-grid">
-                <div class="stat-card cyan-glow">
-                    <div class="stat-icon-wrap">
-                        <span class="stat-icon">🏃‍♂️</span>
-                    </div>
-                    <div class="stat-info">
-                        <span class="stat-label">TOTAL RUNNERS CHECKED</span>
-                        <span class="stat-number" id="stat-total">0</span>
-                    </div>
-                </div>
-                <div class="stat-card red-glow">
-                    <div class="stat-icon-wrap">
-                        <span class="stat-icon">🔥</span>
-                    </div>
-                    <div class="stat-info">
-                        <span class="stat-label">LATEST ACTIVE PING</span>
-                        <span class="stat-number highlight-red" id="stat-latest">NONE</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="leaderboard-container">
-            <div class="panel-title">OFFICIAL LIVE LEADERBOARD</div>
-            
-            <div id="leaderboard-podium-root">
-                <div class="loading-text">Menunggu inisialisasi data dari pos lintasan...</div>
-            </div>
-        </section>
-
-        <footer class="control-navigation">
-            <a href="scanner.html" class="btn btn-cyan">
-                <span class="btn-icon">🔔</span> CHECKPOINT MARSHAL PORTAL (OPEN SCANNER)
-            </a>
-            <a href="leaderboard.html" class="btn btn-gold">
-                <span class="btn-icon">🏆</span> OFFICIAL STANDINGS (LIVE LEADERBOARD)
-            </a>
-        </footer>
-        
-        <div class="footer-credit">POWERED BY GITHUB PAGES & FIREBASE</div>
-    </div>
-
-    <script>
+<script>
         const firebaseConfig = {
           apiKey: "AIzaSyAMThjhhw7jWb2pvYz5OFcnvMiTt6-Co",
           authDomain: "runner-system.firebaseapp.com",
@@ -122,7 +19,6 @@
 
         const trackingRef = database.ref('tracking/');
 
-        // Fungsi Utama untuk Padam Runner ID dari Firebase
         function deleteRunner(runnerId) {
             if (confirm(`Adakah anda pasti mahu memadam Runner ID: ${runnerId}?`)) {
                 database.ref('tracking/' + runnerId).remove()
@@ -140,15 +36,23 @@
             if (data) {
                 let runnersArray = Object.values(data);
                 
-                // Urutkan berdasarkan waktu terkecil (Tercepat di atas)
-                runnersArray.sort((a, b) => a.raw_time - b.raw_time);
+                // Susun leaderboard mengikut masa diambil terpantas (elapsed_time paling kecil)
+                runnersArray.sort((a, b) => (a.elapsed_time || Infinity) - (b.elapsed_time || Infinity));
                 
-                // Pelari paling update terakhir masuk
-                let latestRunner = [...runnersArray].sort((a,b) => b.raw_time - a.raw_time)[0];
+                // Cari aktiviti imbasan yang paling terakhir masuk berdasarkan timestamp terbaru
+                let latestRunner = [...runnersArray].sort((a,b) => {
+                    let timeA = Math.max(a.checkpoint_time || 0, a.finish_time || 0);
+                    let timeB = Math.max(b.checkpoint_time || 0, b.finish_time || 0);
+                    return timeB - timeA;
+                })[0];
                 
                 // Update statistik counter atas
                 statTotal.innerText = runnersArray.length;
-                statLatest.innerText = `${latestRunner.runner_id} (${latestRunner.recorded_time})`;
+                
+                if (latestRunner) {
+                    let currentStatus = latestRunner.status === 'Finished' ? '🏁 Tamat' : '🏃‍♂️ Mula';
+                    statLatest.innerText = `${latestRunner.runner_id} (${currentStatus})`;
+                }
                 
                 podiumRoot.innerHTML = "";
                 
@@ -156,8 +60,8 @@
                 let generalRowsHTML = '<div class="sub-runners-list">';
                 
                 runnersArray.forEach((runner, index) => {
-                    // Tukar sebut harga single quote ke entiti HTML untuk elakkan ralat nama pelari bermasalah teks
                     const safeId = runner.runner_id.replace(/'/g, "\\'");
+                    let timeDisplay = runner.status === 'Finished' ? `⏱️ ${runner.recorded_time}` : `${runner.recorded_time}`;
 
                     if (index === 0) {
                         topThreeHTML += `
@@ -165,7 +69,7 @@
                                 <button class="btn-delete" onclick="deleteRunner('${safeId}')">❌</button>
                                 <div class="card-rank-badge font-orbitron"><span class="emoji-crown">👑</span> #1</div>
                                 <div class="card-runner-id">${runner.runner_id}</div>
-                                <div class="card-time-meta">Cleared ⏱️ ${runner.recorded_time}</div>
+                                <div class="card-time-meta">${timeDisplay}</div>
                             </div>
                         `;
                     } else if (index === 1) {
@@ -174,7 +78,7 @@
                                 <button class="btn-delete" onclick="deleteRunner('${safeId}')">❌</button>
                                 <div class="card-rank-badge font-orbitron">🥈 #2</div>
                                 <div class="card-runner-id">${runner.runner_id}</div>
-                                <div class="card-time-meta">Cleared ⏱️ ${runner.recorded_time}</div>
+                                <div class="card-time-meta">${timeDisplay}</div>
                             </div>
                         `;
                     } else if (index === 2) {
@@ -183,7 +87,7 @@
                                 <button class="btn-delete" onclick="deleteRunner('${safeId}')">❌</button>
                                 <div class="card-rank-badge font-orbitron">🥉 #3</div>
                                 <div class="card-runner-id">${runner.runner_id}</div>
-                                <div class="card-time-meta">Cleared ⏱️ ${runner.recorded_time}</div>
+                                <div class="card-time-meta">${timeDisplay}</div>
                             </div>
                         `;
                     } else {
@@ -191,7 +95,7 @@
                             <div class="runner-pill">
                                 <span class="pill-rank">#${index + 1}</span>
                                 <span class="pill-id">${runner.runner_id}</span>
-                                <span class="pill-time">⏱️ ${runner.recorded_time}</span>
+                                <span class="pill-time">${timeDisplay}</span>
                                 <button class="btn-delete pill-delete" onclick="deleteRunner('${safeId}')">❌</button>
                             </div>
                         `;
@@ -213,5 +117,3 @@
             }
         });
     </script>
-</body>
-</html>
