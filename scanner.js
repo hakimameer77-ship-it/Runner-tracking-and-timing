@@ -11,44 +11,41 @@ const firebaseConfig = {
 
 if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
-
 const beep = document.getElementById("beep-sound");
 
-// KUNCI KESELAMATAN: Elakkan kamera scan benda yang sama banyak kali dalam 1 saat
 let isProcessing = false; 
+let lastScannedText = "";
+let lastScannedTime = 0;
 
 function onScanSuccess(decodedText) {
-    // Jika sistem sedang hantar data, abaikan imbasan baru buat sementara waktu
+    const now = Date.now();
+    
+    // Anti-spam: Sekat jika QR yang sama diimbas dalam masa 3 saat
+    if (decodedText === lastScannedText && (now - lastScannedTime) < 3000) {
+        return; 
+    }
+
     if (isProcessing) return;
     isProcessing = true;
 
+    lastScannedText = decodedText;
+    lastScannedTime = now;
+
     try {
-        // PEMBERSIH TEKS: Buang jarak (space) dan tukar simbol terlarang Firebase kepada sengkang (-)
+        // Bersihkan teks daripada simbol pelik yang dibenci Firebase
         let runnerId = decodedText.trim().replace(/[.#$\[\]\/]/g, "-");
-        
-        if (!runnerId) {
-            alert("Ralat: Kod QR kosong atau tidak sah!");
-            isProcessing = false;
-            return;
-        }
+        if (!runnerId) { isProcessing = false; return; }
 
         const stationElement = document.getElementById("scan-station");
-        if (!stationElement) {
-            alert("Ralat Sistem: Pilihan stesen tidak dijumpai di paparan skrin!");
-            isProcessing = false;
-            return;
-        }
-        
         const station = stationElement.value;
         const runnerRef = database.ref('tracking/' + runnerId);
 
-        // Bunyikan Beep jika ada
-        if (beep) beep.play().catch(e => console.log("Audio play blocked by phone"));
+        if (beep) {
+            beep.play().catch(e => console.log("Bunyi disekat pelayar web"));
+        }
 
-        // Proses penghantaran data ke Firebase
         runnerRef.once('value').then((snapshot) => {
             const data = snapshot.val() || {};
-            const now = Date.now();
 
             if (station === 'start') {
                 runnerRef.set({
@@ -58,50 +55,44 @@ function onScanSuccess(decodedText) {
                     recorded_time: '🏃‍♂️ Racing...',
                     elapsed_time: Infinity
                 }).then(() => {
-                    alert(`✅ MULA: Pelari [${runnerId}] berjaya direkod!`);
-                    setTimeout(() => { isProcessing = false; }, 2000); // Rehat 2 saat sebelum scan seterusnya
+                    alert(`✅ START LINE:\nPelari [${runnerId}] Mula Berlari!`);
+                    isProcessing = false;
                 });
             } 
             else if (station === 'checkpoint1') {
-                if (!data.start_time) {
-                    alert(`⚠️ AMARAN: Pelari [${runnerId}] BELUM scan di START LINE!`);
-                    setTimeout(() => { isProcessing = false; }, 2000);
-                    return;
+                if (!data.start_time) { 
+                    alert(`⚠️ AMARAN:\nPelari [${runnerId}] tidak melalui START LINE lagi!`); 
+                    isProcessing = false; 
+                    return; 
                 }
-                runnerRef.update({
-                    checkpoint1_time: now,
-                    status: 'Passed Checkpoint 1'
-                }).then(() => {
-                    alert(`✅ CHECKPOINT 1: Pelari [${runnerId}] berjaya dilepaskan!`);
-                    setTimeout(() => { isProcessing = false; }, 2000);
+                runnerRef.update({ checkpoint1_time: now, status: 'Passed Checkpoint 1' }).then(() => {
+                    alert(`✅ CHECKPOINT 1:\nPelari [${runnerId}] Melepasi Checkpoint 1!`);
+                    isProcessing = false;
                 });
             }
             else if (station === 'checkpoint2') {
-                if (!data.start_time) {
-                    alert(`⚠️ AMARAN: Pelari [${runnerId}] BELUM scan di START LINE!`);
-                    setTimeout(() => { isProcessing = false; }, 2000);
-                    return;
+                if (!data.start_time) { 
+                    alert(`⚠️ AMARAN:\nPelari [${runnerId}] tidak melalui START LINE lagi!`); 
+                    isProcessing = false; 
+                    return; 
                 }
-                runnerRef.update({
-                    checkpoint2_time: now,
-                    status: 'Passed Checkpoint 2'
-                }).then(() => {
-                    alert(`✅ CHECKPOINT 2: Pelari [${runnerId}] berjaya dilepaskan!`);
-                    setTimeout(() => { isProcessing = false; }, 2000);
+                runnerRef.update({ checkpoint2_time: now, status: 'Passed Checkpoint 2' }).then(() => {
+                    alert(`✅ CHECKPOINT 2:\nPelari [${runnerId}] Melepasi Checkpoint 2!`);
+                    isProcessing = false;
                 });
             }
             else if (station === 'finish') {
-                if (!data.start_time) {
-                    alert(`⚠️ AMARAN: Pelari [${runnerId}] BELUM scan di START LINE!`);
-                    setTimeout(() => { isProcessing = false; }, 2000);
-                    return;
+                if (!data.start_time) { 
+                    alert(`⚠️ AMARAN:\nPelari [${runnerId}] tidak melalui START LINE lagi!`); 
+                    isProcessing = false; 
+                    return; 
                 }
-
+                
                 const elapsedMs = now - data.start_time;
                 const hours = Math.floor(elapsedMs / 3600000);
                 const minutes = Math.floor((elapsedMs % 3600000) / 60000);
                 const seconds = Math.floor((elapsedMs % 60000) / 1000);
-                const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                const formattedTime = `${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
 
                 runnerRef.update({
                     finish_time: now,
@@ -109,21 +100,25 @@ function onScanSuccess(decodedText) {
                     recorded_time: formattedTime,
                     status: 'Finished'
                 }).then(() => {
-                    alert(`🏆 TAMAT: Pelari [${runnerId}] Selesai! Masa: ${formattedTime}`);
-                    setTimeout(() => { isProcessing = false; }, 2000);
+                    alert(`🏆 FINISH LINE:\nPelari [${runnerId}] TAMAT!\nMasa: ${formattedTime}`);
+                    isProcessing = false;
                 });
             }
-        }).catch((error) => {
-            alert("Ralat Pangkalan Data (Firebase): " + error.message);
-            isProcessing = false;
+        }).catch((err) => { 
+            alert("Ralat Firebase: " + err.message); 
+            isProcessing = false; 
         });
-        
-    } catch (err) {
-        alert("Ralat Aplikasi: " + err.message);
-        isProcessing = false;
+    } catch (err) { 
+        alert("Ralat Aplikasi: " + err.message); 
+        isProcessing = false; 
     }
 }
 
-// Render Scanner HTML5
-let scanner = new Html5QrcodeScanner("reader", { fps: 15, qrbox: 250 }, false);
-scanner.render(onScanSuccess);
+// Menjalankan pengimbas dengan tetapan kamera telefon pintar yang lebih baik
+let html5QrcodeScanner = new Html5QrcodeScanner("reader", { 
+    fps: 10, 
+    qrbox: { width: 250, height: 250 },
+    rememberLastUsedCamera: true
+}, false);
+
+html5QrcodeScanner.render(onScanSuccess);
