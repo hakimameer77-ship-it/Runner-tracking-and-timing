@@ -5,56 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marshal QR Scanning Portal - Pro</title>
     <link rel="stylesheet" href="style.css">
-    
-    <script src="https://unpkg.com/html5-qrcode"></script>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-    <style>
-        .station-selector {
-            margin: 15px 0 25px 0;
-            text-align: left;
-        }
-        .station-selector label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #1982c4;
-        }
-        .station-selector select {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 2px solid #e2e8f0;
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 16px;
-            font-weight: 600;
-            background: #ffffff;
-            color: #102a43;
-        }
-    </style>
 </head>
 <body>
-    <div class="container">
-        <a href="index.html" style="text-decoration: none; color: #1982c4; font-weight: 600; font-size: 14px;">← Back to Main Menu</a>
-        <h2>Marshal Scanning Portal</h2>
+    <div class="stadium-overlay"></div>
+    <div class="container" style="background: rgba(15, 23, 42, 0.85); padding: 25px; border-radius: 16px; max-width: 500px; width: 90%; margin: 20px auto; box-shadow: 0 0 20px rgba(0, 245, 212, 0.2); border: 1px solid rgba(0, 245, 212, 0.3);">
+        <a href="index.html" style="text-decoration: none; color: #00f5d4; font-weight: 700; font-family: 'Orbitron'; font-size: 14px; display: inline-block; margin-bottom: 15px;">← BACK TO MENU</a>
+        <h2 style="font-family: 'Orbitron'; color: #ffffff; text-align: center; font-size: 20px; margin-bottom: 20px; letter-spacing: 1px;">MARSHAL STATION SCANNER</h2>
         
-        <div class="station-selector">
-            <label for="scan-station">SELECT SCANNING STATION:</label>
-            <select id="scan-station">
-                <option value="start">🏁 START LINE (Begin Timing)</option>
+        <div style="margin-bottom: 25px; text-align: left;">
+            <label for="scan-station" style="font-family:'Orbitron'; font-size:11px; color:#8892b0; letter-spacing:1px; display:block; margin-bottom:8px;">SELECT YOUR TARGET STATION:</label>
+            <select id="scan-station" style="width:100%; background:#020c1b; border:2px solid #00f5d4; color:#ffffff; padding:12px; border-radius:10px; font-family:'Rajdhani'; font-size:18px; font-weight:700; outline: none;">
+                <option value="start">▶️ START LINE</option>
                 <option value="checkpoint1">📍 CHECKPOINT 1</option>
                 <option value="checkpoint2">📍 CHECKPOINT 2</option>
-                <option value="finish">🏆 FINISH LINE (Stop & Calculate Time)</option>
+                <option value="finish">🏁 FINISH LINE</option>
             </select>
         </div>
 
-        <div id="reader"></div>
-        <div id="result" class="success-msg" style="display: none;"></div>
+        <div id="reader" style="background: #020c1b; border: 2px dashed #00f5d4; border-radius:12px; overflow:hidden;"></div>
     </div>
 
     <audio id="beep-sound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-84.wav" preload="auto"></audio>
-
     <script src="scanner.js"></script>
 </body>
 </html>
