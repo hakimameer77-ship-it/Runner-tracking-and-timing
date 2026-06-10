@@ -5,69 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Official Live Leaderboard - Pro</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-    <style>
-        /* Tambahan Gaya Statistik Premium */
-        .stat-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-        .stat-card {
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            padding: 15px;
-            border-radius: 14px;
-            border: 1px solid #e2e8f0;
-            text-align: center;
-        }
-        .stat-number {
-            font-size: 24px;
-            font-weight: 800;
-            color: #0b69a3;
-            margin-top: 5px;
-        }
-        .stat-label {
-            font-size: 11px;
-            text-transform: uppercase;
-            color: #64748b;
-            letter-spacing: 0.5px;
-            font-weight: 600;
-        }
-        .badge-icon {
-            font-size: 18px;
-            margin-right: 5px;
-        }
-    </style>
 </head>
 <body>
+    <div class="stadium-overlay"></div>
+
     <div class="container">
-        <a href="index.html" style="text-decoration: none; color: #1982c4; font-weight: 600; font-size: 14px;">← Back to Main Menu</a>
-        <h2>Official Live Standings</h2>
+        <a href="index.html" style="text-decoration: none; color: #00b4d8; font-weight: 700; font-size: 14px; letter-spacing: 1px; font-family: 'Orbitron', sans-serif;">← KEMBALI KE MENU</a>
+        
+        <h2>OFFICIAL LIVE STANDINGS</h2>
         
         <div class="stat-grid">
-            <div class="stat-card">
-                <div class="stat-label">Total Runners Checked</div>
-                <div class="stat-number" id="stat-total">0</div>
+            <div class="stat-card cyan-glow">
+                <div class="stat-icon-wrap">🏃‍♂️</div>
+                <div class="stat-info">
+                    <div class="stat-label">Jumlah Pelari Berdaftar</div>
+                    <div class="stat-number" id="stat-total">0</div>
+                </div>
             </div>
-            <div class="stat-card" style="border-left: 4px solid #2ec4b6;">
-                <div class="stat-label">Latest Active Ping</div>
-                <div class="stat-number" id="stat-latest" style="font-size: 14px; color: #102a43; padding-top: 8px;">None</div>
+            <div class="stat-card red-glow">
+                <div class="stat-icon-wrap">⚡</div>
+                <div class="stat-info">
+                    <div class="stat-label">Imbasan Terkini</div>
+                    <div class="stat-number" id="stat-latest" style="font-size: 16px; color: #ff4b4b; font-family: 'Orbitron', sans-serif;">None</div>
+                </div>
             </div>
         </div>
         
         <table>
             <thead>
                 <tr>
-                    <th>Rank</th>
-                    <th>Runner ID</th>
-                    <th>Time Cleared</th>
+                    <th>Kedudukan (Rank)</th>
+                    <th>ID Pelari (Runner ID)</th>
+                    <th>Masa Diambil / Status</th>
                 </tr>
             </thead>
             <tbody id="leaderboard-data">
                 <tr>
-                    <td colspan="3" style="text-align: center; color: #627d98; font-weight: 500;">Awaiting initialization parameters from checkpoint marshals...</td>
+                    <td colspan="3" style="text-align: center; color: #8892b0; font-weight: 500;" class="loading-text">
+                        Menunggu isyarat kemas kini dari marshal di tapak perlumbaan...
+                    </td>
                 </tr>
             </tbody>
         </table>
