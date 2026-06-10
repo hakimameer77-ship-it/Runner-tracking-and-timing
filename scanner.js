@@ -20,7 +20,7 @@ let lastScannedTime = 0;
 function onScanSuccess(decodedText) {
     const now = Date.now();
     
-    // Anti-spam: Sekat jika QR yang sama diimbas dalam masa 3 saat
+    // Anti-spam: Sekat jika QR yang yang sama diimbas berturut-turut dalam masa 3 saat
     if (decodedText === lastScannedText && (now - lastScannedTime) < 3000) {
         return; 
     }
@@ -32,7 +32,7 @@ function onScanSuccess(decodedText) {
     lastScannedTime = now;
 
     try {
-        // Bersihkan teks daripada simbol pelik yang dibenci Firebase
+        // Bersihkan teks daripada simbol yang dilarang oleh Firebase
         let runnerId = decodedText.trim().replace(/[.#$\[\]\/]/g, "-");
         if (!runnerId) { isProcessing = false; return; }
 
@@ -41,21 +41,25 @@ function onScanSuccess(decodedText) {
         const runnerRef = database.ref('tracking/' + runnerId);
 
         if (beep) {
-            beep.play().catch(e => console.log("Bunyi disekat pelayar web"));
+            beep.play().catch(e => console.log("Audio play blocked"));
         }
 
         runnerRef.once('value').then((snapshot) => {
             const data = snapshot.val() || {};
 
             if (station === 'start') {
+                // Menukar Infinity kepada 999999999999 untuk mengelakkan ralat Firebase set failed
                 runnerRef.set({
                     runner_id: runnerId,
                     start_time: now,
                     status: 'In Progress',
                     recorded_time: '🏃‍♂️ Racing...',
-                    elapsed_time: Infinity
+                    elapsed_time: 999999999999
                 }).then(() => {
                     alert(`✅ START LINE:\nPelari [${runnerId}] Mula Berlari!`);
+                    isProcessing = false;
+                }).catch((err) => {
+                    alert("Firebase Set Error: " + err.message);
                     isProcessing = false;
                 });
             } 
@@ -114,7 +118,6 @@ function onScanSuccess(decodedText) {
     }
 }
 
-// Menjalankan pengimbas dengan tetapan kamera telefon pintar yang lebih baik
 let html5QrcodeScanner = new Html5QrcodeScanner("reader", { 
     fps: 10, 
     qrbox: { width: 250, height: 250 },
