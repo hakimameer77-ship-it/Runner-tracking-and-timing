@@ -11,7 +11,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     <style>
-        /* Gaya tambahan untuk pilihan stesen */
         .station-selector {
             margin: 15px 0 25px 0;
             text-align: left;
@@ -38,18 +37,19 @@
 <body>
     <div class="container">
         <a href="index.html" style="text-decoration: none; color: #1982c4; font-weight: 600; font-size: 14px;">← Back to Main Menu</a>
-        <h2>Checkpoint / Finish Line Scanner</h2>
+        <h2>Marshal Scanning Portal</h2>
         
         <div class="station-selector">
-            <label for="scan-station">PILIH STESEN IMBASAN:</label>
+            <label for="scan-station">SELECT SCANNING STATION:</label>
             <select id="scan-station">
-                <option value="checkpoint">👉 CHECKPOINT 1 (Mula Kira Masa)</option>
-                <option value="finish">🏁 FINISH LINE (Tamat & Kira Tempoh)</option>
+                <option value="start">🏁 START LINE (Begin Timing)</option>
+                <option value="checkpoint1">📍 CHECKPOINT 1</option>
+                <option value="checkpoint2">📍 CHECKPOINT 2</option>
+                <option value="finish">🏆 FINISH LINE (Stop & Calculate Time)</option>
             </select>
         </div>
 
         <div id="reader"></div>
-        
         <div id="result" class="success-msg" style="display: none;"></div>
     </div>
 
