@@ -1,4 +1,107 @@
-<script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Runner Tracking & Timing System</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <style>
+        /* Gaya Butang Delete Sukan HUD */
+        .btn-delete {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 75, 75, 0.15);
+            border: 1px solid rgba(255, 75, 75, 0.4);
+            color: #ff4b4b;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            font-size: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+        .btn-delete:hover {
+            background: #ff4b4b;
+            color: #ffffff;
+            box-shadow: 0 0 10px rgba(255, 75, 75, 0.6);
+            transform: scale(1.1);
+        }
+        .pill-delete {
+            position: relative;
+            top: unset;
+            right: unset;
+            margin-left: 8px;
+            width: 18px;
+            height: 18px;
+            font-size: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stadium-overlay"></div>
+
+    <div class="main-container">
+        
+        <header class="main-header">
+            <h1 class="glow-text">RUNNER TRACKING & TIMING SYSTEM: <span class="highlight">FINAL STANDINGS</span></h1>
+            <p class="subtitle">Powered by Firebase Live Cloud & QR Scan Technology</p>
+        </header>
+
+        <section class="live-stats-container">
+            <div class="panel-title">LIVE STATISTICS COUNTER</div>
+            <div class="stats-grid">
+                <div class="stat-card cyan-glow">
+                    <div class="stat-icon-wrap">
+                        <span class="stat-icon">🏃‍♂️</span>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">TOTAL RUNNERS CHECKED</span>
+                        <span class="stat-number" id="stat-total">0</span>
+                    </div>
+                </div>
+                <div class="stat-card red-glow">
+                    <div class="stat-icon-wrap">
+                        <span class="stat-icon">🔥</span>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">LATEST ACTIVE PING</span>
+                        <span class="stat-number highlight-red" id="stat-latest">NONE</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="leaderboard-container">
+            <div class="panel-title">OFFICIAL LIVE LEADERBOARD (4 STATIONS)</div>
+            
+            <div id="leaderboard-podium-root">
+                <div class="loading-text">Awaiting data initialization from checkpoint marshals...</div>
+            </div>
+        </section>
+
+        <footer class="control-navigation">
+            <a href="scanner.html" class="btn btn-cyan">
+                <span class="btn-icon">🔔</span> CHECKPOINT MARSHAL PORTAL (OPEN SCANNER)
+            </a>
+            <a href="leaderboard.html" class="btn btn-gold">
+                <span class="btn-icon">🏆</span> OFFICIAL STANDINGS (LIVE LEADERBOARD)
+            </a>
+        </footer>
+        
+        <div class="footer-credit">POWERED BY GITHUB PAGES & FIREBASE</div>
+    </div>
+
+    <script>
+        // Konfigurasi Pangkalan Data Firebase Anda
         const firebaseConfig = {
           apiKey: "AIzaSyAMThjhhw7jWb2pvYz5OFcnvMiTt6-Co",
           authDomain: "runner-system.firebaseapp.com",
@@ -19,92 +122,142 @@
 
         const trackingRef = database.ref('tracking/');
 
+        // Fungsi padam rekod pelari individu
         function deleteRunner(runnerId) {
-            if (confirm(`Delete Runner ID: ${runnerId}?`)) {
-                database.ref('tracking/' + runnerId).remove();
+            if (confirm(`Are you sure you want to delete Runner ID: ${runnerId}?`)) {
+                database.ref('tracking/' + runnerId).remove()
+                .then(() => {
+                    alert(`Runner ID: ${runnerId} successfully deleted!`);
+                })
+                .catch((error) => {
+                    console.error("Failed to delete data:", error);
+                });
             }
         }
 
+        // Mendengarkan perubahan data secara Real-time
         trackingRef.on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                let runnersArray = Object.values(data);
-                
-                // Susun berdasarkan elapsed_time terpantas
-                runnersArray.sort((a, b) => (a.elapsed_time || Infinity) - (b.elapsed_time || Infinity));
-                
-                // Cari ping terakhir dari mana-mana stesen imbasan
-                let latestRunner = [...runnersArray].sort((a,b) => {
-                    let timeA = Math.max(a.start_time || 0, a.checkpoint1_time || 0, a.checkpoint2_time || 0, a.finish_time || 0);
-                    let timeB = Math.max(b.start_time || 0, b.checkpoint1_time || 0, b.checkpoint2_time || 0, b.finish_time || 0);
-                    return timeB - timeA;
-                })[0];
-                
-                statTotal.innerText = runnersArray.length;
-                
-                if (latestRunner) {
-                    statLatest.innerText = `${latestRunner.runner_id} (${latestRunner.status})`;
-                }
-                
-                podiumRoot.innerHTML = "";
-                let topThreeHTML = '<div class="podium-grid">';
-                let generalRowsHTML = '<div class="sub-runners-list">';
-                
-                runnersArray.forEach((runner, index) => {
-                    const safeId = runner.runner_id.replace(/'/g, "\\'");
-                    let timeDisplay = runner.status === 'Finished' ? `⏱️ ${runner.recorded_time}` : `🏃‍♂️ ${runner.status}`;
-
-                    if (index === 0) {
-                        topThreeHTML += `
-                            <div class="podium-card rank-1-gold">
-                                <button class="btn-delete" onclick="deleteRunner('${safeId}')">❌</button>
-                                <div class="card-rank-badge font-orbitron"><span class="emoji-crown">👑</span> #1</div>
-                                <div class="card-runner-id">${runner.runner_id}</div>
-                                <div class="card-time-meta">${timeDisplay}</div>
-                            </div>
-                        `;
-                    } else if (index === 1) {
-                        topThreeHTML += `
-                            <div class="podium-card rank-2-silver">
-                                <button class="btn-delete" onclick="deleteRunner('${safeId}')">❌</button>
-                                <div class="card-rank-badge font-orbitron">🥈 #2</div>
-                                <div class="card-runner-id">${runner.runner_id}</div>
-                                <div class="card-time-meta">${timeDisplay}</div>
-                            </div>
-                        `;
-                    } else if (index === 2) {
-                        topThreeHTML += `
-                            <div class="podium-card rank-3-bronze">
-                                <button class="btn-delete" onclick="deleteRunner('${safeId}')">❌</button>
-                                <div class="card-rank-badge font-orbitron">🥉 #3</div>
-                                <div class="card-runner-id">${runner.runner_id}</div>
-                                <div class="card-time-meta">${timeDisplay}</div>
-                            </div>
-                        `;
-                    } else {
-                        generalRowsHTML += `
-                            <div class="runner-pill">
-                                <span class="pill-rank">#${index + 1}</span>
-                                <span class="pill-id">${runner.runner_id}</span>
-                                <span class="pill-time">${timeDisplay}</span>
-                                <button class="btn-delete pill-delete" onclick="deleteRunner('${safeId}')">❌</button>
-                            </div>
-                        `;
+            try {
+                const data = snapshot.val();
+                if (data) {
+                    let runnersArray = Object.values(data);
+                    
+                    // PENAPIS KESELAMATAN: Buang data tidak sah yang tiada runner_id (Mencegah skrin putih)
+                    runnersArray = runnersArray.filter(runner => runner && runner.runner_id);
+                    
+                    // LOGIK SUSUNAN PINTAR:
+                    runnersArray.sort((a, b) => {
+                        // 1. Jika kedua-duanya tamat (Finished), susun mengikut masa terpantas (elapsed_time terkecil)
+                        if (a.status === 'Finished' && b.status === 'Finished') {
+                            return (a.elapsed_time || 0) - (b.elapsed_time || 0);
+                        }
+                        // 2. Jika pelari 'a' tamat tapi 'b' belum, 'a' mesti berada di atas
+                        if (a.status === 'Finished') return -1;
+                        if (b.status === 'Finished') return 1;
+                        
+                        // 3. Jika kedua-duanya belum tamat, susun mengikut stesen tertinggi yang dicapai
+                        const getProgressScore = (status) => {
+                            if (status === 'Passed Checkpoint 2') return 3;
+                            if (status === 'Passed Checkpoint 1') return 2;
+                            if (status === 'In Progress') return 1;
+                            return 0;
+                        };
+                        
+                        let scoreA = getProgressScore(a.status);
+                        let scoreB = getProgressScore(b.status);
+                        
+                        if (scoreA !== scoreB) {
+                            return scoreB - scoreA; // Skor tinggi (stesen depan) berada di atas
+                        }
+                        
+                        // 4. Jika berada di stesen yang sama, susun mengikut siapa sampai dahulu di stesen tersebut
+                        let timeA = Math.max(a.checkpoint2_time || 0, a.checkpoint1_time || 0, a.start_time || 0);
+                        let timeB = Math.max(b.checkpoint2_time || 0, b.checkpoint1_time || 0, b.start_time || 0);
+                        return timeA - timeB;
+                    });
+                    
+                    // Cari isyarat imbasan yang paling terakhir dikemaskini
+                    let latestRunner = [...runnersArray].sort((a,b) => {
+                        let timeA = Math.max(a.start_time || 0, a.checkpoint1_time || 0, a.checkpoint2_time || 0, a.finish_time || 0);
+                        let timeB = Math.max(b.start_time || 0, b.checkpoint1_time || 0, b.checkpoint2_time || 0, b.finish_time || 0);
+                        return timeB - timeA;
+                    })[0];
+                    
+                    statTotal.innerText = runnersArray.length;
+                    
+                    if (latestRunner) {
+                        statLatest.innerText = `${latestRunner.runner_id} (${latestRunner.status || 'Updated'})`;
                     }
-                });
-                
-                topThreeHTML += '</div>';
-                generalRowsHTML += '</div>';
-                
-                podiumRoot.innerHTML = topThreeHTML;
-                if(runnersArray.length > 3) {
-                    podiumRoot.innerHTML += generalRowsHTML;
+                    
+                    podiumRoot.innerHTML = "";
+                    
+                    let topThreeHTML = '<div class="podium-grid">';
+                    let generalRowsHTML = '<div class="sub-runners-list">';
+                    
+                    runnersArray.forEach((runner, index) => {
+                        const currentId = String(runner.runner_id);
+                        const safeId = currentId.replace(/'/g, "\\'");
+                        
+                        // Paparan masa/status di kad
+                        let timeDisplay = runner.status === 'Finished' ? `⏱️ ${runner.recorded_time}` : `🏃‍♂️ ${runner.status || 'Racing'}`;
+
+                        if (index === 0) {
+                            topThreeHTML += `
+                                <div class="podium-card rank-1-gold">
+                                    <button class="btn-delete" onclick="deleteRunner('${safeId}')">❌</button>
+                                    <div class="card-rank-badge font-orbitron"><span class="emoji-crown">👑</span> #1</div>
+                                    <div class="card-runner-id">${currentId}</div>
+                                    <div class="card-time-meta">${timeDisplay}</div>
+                                </div>
+                            `;
+                        } else if (index === 1) {
+                            topThreeHTML += `
+                                <div class="podium-card rank-2-silver">
+                                    <button class="btn-delete" onclick="deleteRunner('${safeId}')">❌</button>
+                                    <div class="card-rank-badge font-orbitron">🥈 #2</div>
+                                    <div class="card-runner-id">${currentId}</div>
+                                    <div class="card-time-meta">${timeDisplay}</div>
+                                </div>
+                            `;
+                        } else if (index === 2) {
+                            topThreeHTML += `
+                                <div class="podium-card rank-3-bronze">
+                                    <button class="btn-delete" onclick="deleteRunner('${safeId}')">❌</button>
+                                    <div class="card-rank-badge font-orbitron">🥉 #3</div>
+                                    <div class="card-runner-id">${currentId}</div>
+                                    <div class="card-time-meta">${timeDisplay}</div>
+                                </div>
+                            `;
+                        } else {
+                            generalRowsHTML += `
+                                <div class="runner-pill">
+                                    <span class="pill-rank">#${index + 1}</span>
+                                    <span class="pill-id">${currentId}</span>
+                                    <span class="pill-time">${timeDisplay}</span>
+                                    <button class="btn-delete pill-delete" onclick="deleteRunner('${safeId}')">❌</button>
+                                </div>
+                            `;
+                        }
+                    });
+                    
+                    topThreeHTML += '</div>';
+                    generalRowsHTML += '</div>';
+                    
+                    podiumRoot.innerHTML = topThreeHTML;
+                    if(runnersArray.length > 3) {
+                        podiumRoot.innerHTML += generalRowsHTML;
+                    }
+                    
+                } else {
+                    statTotal.innerText = "0";
+                    statLatest.innerText = "NONE";
+                    podiumRoot.innerHTML = '<div class="loading-text">Awaiting data initialization from checkpoint marshals...</div>';
                 }
-                
-            } else {
-                statTotal.innerText = "0";
-                statLatest.innerText = "NONE";
-                podiumRoot.innerHTML = '<div class="loading-text">Awaiting data initialization from checkpoint marshals...</div>';
+            } catch (err) {
+                console.error("Error encountered in rendering:", err);
+                podiumRoot.innerHTML = `<div class="loading-text" style="color: #ff4b4b; font-weight: bold;">[SYSTEM ERROR] ${err.message}. Sila pastikan anda mengosongkan folder 'tracking' lama di Firebase Console!</div>`;
             }
         });
     </script>
+</body>
+</html>
